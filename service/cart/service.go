@@ -20,7 +20,7 @@ func (h *Handler) CreateOrder(cart types.CartCheckoutPayload, userID int) (types
 		return types.Order{}, fmt.Errorf("cart is empy")
 	}
 
-	tx, err := h.DB.Begin()
+	tx, err := h.orderRepository.GetTransaction()
 	if err != nil {
 		return types.Order{}, err
 	}
@@ -34,7 +34,7 @@ func (h *Handler) CreateOrder(cart types.CartCheckoutPayload, userID int) (types
 
 	// get products
 	productIDs := h.GetCartItemsIDs(cart.Items)
-	products, _ := h.productStore.GetProductsByIds(tx, productIDs)
+	products, _ := h.productRepository.GetProductsByIds(tx, productIDs)
 
 	productMap := make(map[int]*types.Product)
 
@@ -61,10 +61,10 @@ func (h *Handler) CreateOrder(cart types.CartCheckoutPayload, userID int) (types
 	for i, v := range cart.Items {
 		productsToUpdate[i] = productMap[v.ProductID]
 	}
-	h.productStore.UpdateProducts(tx, productsToUpdate)
+	h.productRepository.UpdateProducts(tx, productsToUpdate)
 
 	// create order
-	order := h.orderStore.CreateOrder(tx, types.Order{
+	order := h.orderRepository.CreateOrder(tx, types.Order{
 		UserID:  userID,
 		Total:   totalPrice,
 		Status:  "pending",
@@ -84,7 +84,7 @@ func (h *Handler) CreateOrder(cart types.CartCheckoutPayload, userID int) (types
 			Price:     productMap[item.ProductID].Price,
 		}
 	}
-	h.orderStore.CreateOrderItems(tx, orderItems)
+	h.orderRepository.CreateOrderItems(tx, orderItems)
 
 	return order, nil
 }

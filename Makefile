@@ -8,8 +8,8 @@ build:
 test:
 	@go test -v ./...
 
-run: build
-	@./bin/ecom
+run:
+	@go run cmd/main.go
 
 migrate-create:
 	@migrate create -ext sql -dir $(MIGRATIONS_PATH) -seq $(word 2, $(MAKECMDGOALS))

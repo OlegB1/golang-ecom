@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type UserStore interface {
+type UserRepository interface {
 	CreateUser(User) error
 	GetUserByEmail(string) (*User, error)
 	GetUserById(int) (*User, error)

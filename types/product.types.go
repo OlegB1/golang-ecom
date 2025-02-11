@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type ProductStore interface {
+type ProductRepository interface {
 	GetProducts(p Pagination) ([]Product, error)
 	GetProductsByIds(*sql.Tx, []int) ([]Product, error)
 	CreateProduct(CreateProductPayload) (Product, error)

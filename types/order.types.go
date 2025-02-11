@@ -5,9 +5,10 @@ import (
 	"time"
 )
 
-type OrderStore interface {
+type OrderRepository interface {
 	CreateOrder(*sql.Tx, Order) Order
 	CreateOrderItems(*sql.Tx, []OrederItem) error
+	GetTransaction() (*sql.Tx, error)
 }
 
 type Order struct {

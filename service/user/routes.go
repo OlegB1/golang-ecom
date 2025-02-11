@@ -1,7 +1,6 @@
 package user
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
 
@@ -12,19 +11,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func RegisterHandler(db *sql.DB, router *mux.Router) {
-	handler := NewHandler(&Store{db: db})
+func RegisterHandler(repository types.UserRepository, router *mux.Router) {
+	handler := NewHandler(repository)
 	router.HandleFunc("/login", handler.handleLogin).Methods("POST")
 	router.HandleFunc("/register", handler.handleRegister).Methods("POST")
 
 }
 
 type Handler struct {
-	store types.UserStore
+	repository types.UserRepository
 }
 
-func NewHandler(store types.UserStore) *Handler {
-	return &Handler{store: store}
+func NewHandler(store types.UserRepository) Handler {
+	return Handler{repository: store}
 }
 func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/login", h.handleLogin).Methods("POST")
@@ -45,7 +44,7 @@ func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u, err := h.store.GetUserByEmail(payload.Email)
+	u, err := h.repository.GetUserByEmail(payload.Email)
 	if err != nil {
 		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("not found email %s", payload.Email))
 		return
@@ -81,7 +80,7 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if _, err := h.store.GetUserByEmail(payload.Email); err == nil {
+	if _, err := h.repository.GetUserByEmail(payload.Email); err == nil {
 		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("user with email %s already exists", payload.Email))
 		return
 
@@ -93,7 +92,7 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusBadRequest, err)
 	}
 
-	err = h.store.CreateUser(types.User{
+	err = h.repository.CreateUser(types.User{
 		FirstName: payload.FirstName,
 		LastName:  payload.LastName,
 		Email:     payload.Email,

@@ -1,7 +1,6 @@
 package product
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
 
@@ -11,24 +10,24 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func RegisterHandler(db *sql.DB, router *mux.Router) {
-	handler := NewHandler(&Store{db: db})
+func RegisterHandler(repository types.ProductRepository, router *mux.Router) {
+	handler := NewHandler(repository)
 
 	router.HandleFunc("/producs", handler.HandleGetProducts).Methods(http.MethodGet)
 	router.HandleFunc("/producs", handler.HandleCreateProduct).Methods(http.MethodPost)
 }
 
 type Handler struct {
-	store types.ProductStore
+	repository types.ProductRepository
 }
 
-func NewHandler(store types.ProductStore) *Handler {
-	return &Handler{store: store}
+func NewHandler(store types.ProductRepository) Handler {
+	return Handler{repository: store}
 }
 
 func (h *Handler) HandleGetProducts(w http.ResponseWriter, r *http.Request) {
 	pagination := utils.GetPagination(r)
-	products, err := h.store.GetProducts(pagination)
+	products, err := h.repository.GetProducts(pagination)
 
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
@@ -58,7 +57,7 @@ func (h *Handler) HandleCreateProduct(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusBadRequest, err)
 		return
 	}
-	product, err := h.store.CreateProduct(p)
+	product, err := h.repository.CreateProduct(p)
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, err)
 		return

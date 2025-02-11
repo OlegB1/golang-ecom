@@ -38,7 +38,7 @@ func CreateJWT(userId int) (string, error) {
 	return tokenString, nil
 }
 
-func JWTMiddleware(store types.UserStore) mux.MiddlewareFunc {
+func JWTMiddleware(store types.UserRepository) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			// Пропуск JWT перевірки для певних URL

@@ -1,33 +1,29 @@
 package cart
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
 
 	"github.com/OlegB1/ecom/service/auth"
-	"github.com/OlegB1/ecom/service/order"
-	"github.com/OlegB1/ecom/service/product"
 	"github.com/OlegB1/ecom/types"
 	"github.com/OlegB1/ecom/utils"
 	"github.com/go-playground/validator"
 	"github.com/gorilla/mux"
 )
 
-func RegisterHandler(db *sql.DB, router *mux.Router) {
-	handler := NewHandler(order.NewStore(db), product.NewStore(db), db)
+func RegisterHandler(orderRepository types.OrderRepository, productRepository types.ProductRepository, router *mux.Router) {
+	handler := NewHandler(orderRepository, productRepository)
 
 	router.HandleFunc("/cart/checkout", handler.HandleCheckout).Methods(http.MethodPost)
 }
 
 type Handler struct {
-	orderStore   types.OrderStore
-	productStore types.ProductStore
-	DB           *sql.DB
+	orderRepository   types.OrderRepository
+	productRepository types.ProductRepository
 }
 
-func NewHandler(orderStore types.OrderStore, productStore types.ProductStore, db *sql.DB) *Handler {
-	return &Handler{orderStore: orderStore, productStore: productStore, DB: db}
+func NewHandler(orderStore types.OrderRepository, productStore types.ProductRepository) *Handler {
+	return &Handler{orderRepository: orderStore, productRepository: productStore}
 }
 
 func (h *Handler) HandleCheckout(w http.ResponseWriter, r *http.Request) {
