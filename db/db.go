@@ -7,10 +7,17 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func NewStorage(connStr string) (*sql.DB, error) {
+func NewStorage(connStr string) *sql.DB {
 	db, err := sql.Open("postgres", connStr)
+
 	if err != nil {
 		log.Fatal(err)
 	}
-	return db, nil
+
+	if err := db.Ping(); err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("DB: Successfully connected")
+	return db
 }
