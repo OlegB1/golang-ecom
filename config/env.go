@@ -10,8 +10,8 @@ import (
 var Envs = initConfig()
 
 type Config struct {
-	DB_ARRD                string
-	SERVER_ARRD            string
+	DB_ADDR                string
+	SERVER_ADDR            string
 	JWT_SECRET_KEY         string
 	JWT_EXPIRATION_SECONDS int
 }
@@ -20,8 +20,8 @@ func initConfig() Config {
 	godotenv.Load()
 
 	return Config{
-		DB_ARRD:                getEnvStr("DB_ARRD"),
-		SERVER_ARRD:            getEnvStr("SERVER_ARRD"),
+		DB_ADDR:                getEnvStr("DB_ADDR"),
+		SERVER_ADDR:            getEnvStr("SERVER_ADDR"),
 		JWT_SECRET_KEY:         getEnvStr("JWT_SECRET_KEY"),
 		JWT_EXPIRATION_SECONDS: getEnvInt("JWT_EXPIRATION_SECONDS"),
 	}

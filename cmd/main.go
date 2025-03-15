@@ -9,9 +9,9 @@ import (
 )
 
 func main() {
-	db := db.NewStorage(config.Envs.DB_ARRD)
+	db := db.NewStorage(config.Envs.DB_ADDR)
 
-	server := api.NewAPIServer(":"+config.Envs.SERVER_ARRD, db)
+	server := api.NewAPIServer(":"+config.Envs.SERVER_ADDR, db)
 	if err := server.Run(); err != nil {
 		log.Fatal(err)
 	}
