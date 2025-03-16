@@ -47,3 +47,4 @@ jobs:
             JWT_EXPIRATION_SECONDS=${{ secrets.JWT_EXPIRATION_SECONDS }},\
             JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }},\
             SERVER_ADDR=${{ secrets.SERVER_ADDR }}"
+          --project=skillful-elf-449919-q5
