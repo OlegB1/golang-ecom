@@ -15,7 +15,7 @@ func main() {
 		port = "8080"
 	}
 
-	server := api.NewAPIServer(":"+config.Envs.SERVER_ADDR, db)
+	server := api.NewAPIServer(":"+port, db)
 	if err := server.Run(); err != nil {
 		log.Fatal(err)
 	}
