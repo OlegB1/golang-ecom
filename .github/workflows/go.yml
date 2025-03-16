@@ -22,7 +22,7 @@ jobs:
 
     - name: Test
       run: go test -v ./...
-    
+
     - name: Build and Push Docker Image
       uses: mr-smithers-excellent/docker-build-push@v4
       with:
@@ -39,16 +39,15 @@ jobs:
 
     - name: Deploy to Cloud Run
       run: |
-       gcloud run deploy my-service \
-        --image=docker.io/***/golang-ecom \
-        --platform=managed \
-        --region=europe-west1 \
-        --allow-unauthenticated \
-        --add-cloudsql-instances=*** \
-        --set-env-vars="DB_HOST=/cloudsql/***,\
-          DB_USER=***,\
-          DB_PASSWORD=***,\
-          JWT_EXPIRATION_SECONDS=***,\
-          JWT_SECRET_KEY=***,\
-          SERVER_ADDR=***" \
-        --project=skillful-elf-449919-q5
+        gcloud run deploy my-service \
+          --image=docker.io/oleh01/golang-ecom:latest \
+          --platform=managed \
+          --region=europe-west1 \
+          --allow-unauthenticated \
+          --add-cloudsql-instances=skillful-elf-449919-q5:europe-central2:postgres \
+          --set-env-vars="\
+            SERVER_ADDR=${{ secrets.SERVER_ADDR }},\
+            DB_ADDR=${{ secrets.DB_ADDR }},\
+            JWT_EXPIRATION_SECONDS=${{ secrets.JWT_EXPIRATION_SECONDS }},\
+            JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" \
+          --project=skillful-elf-449919-q5
