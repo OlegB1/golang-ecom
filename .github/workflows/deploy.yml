@@ -34,4 +34,4 @@ jobs:
               DB_PASSWORD=${{ secrets.DB_PASSWORD }},\
               JWT_EXPIRATION_SECONDS=${{ secrets.JWT_EXPIRATION_SECONDS }},\
               JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }},\
-              SERVER_ADDR=8080"
+              SERVER_ADDR=${{ secrets.SERVER_ADDR }}"
