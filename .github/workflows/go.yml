@@ -1,6 +1,3 @@
-# This workflow will build a golang project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
-
 name: Go
 
 on:
@@ -35,3 +32,18 @@ jobs:
         registry: docker.io
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+        
+    - name: Deploy to Cloud Run
+      run: |
+        gcloud run deploy my-service \
+          --image=docker.io/oleh01/golang-ecom \
+          --platform=managed \
+          --region=europe-west1 \
+          --allow-unauthenticated \
+          --add-cloudsql-instances=${{ secrets.INSTANCE_CONNECTION_NAME }} \
+          --set-env-vars="DB_HOST=/cloudsql/${{ secrets.INSTANCE_CONNECTION_NAME }},\
+            DB_USER=${{ secrets.DB_USER }},\
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }},\
+            JWT_EXPIRATION_SECONDS=${{ secrets.JWT_EXPIRATION_SECONDS }},\
+            JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }},\
+            SERVER_ADDR=${{ secrets.SERVER_ADDR }}"
