@@ -13,8 +13,8 @@ import (
 func RegisterHandler(repository types.ProductRepository, router *mux.Router) {
 	handler := NewHandler(repository)
 
-	router.HandleFunc("/producs", handler.HandleGetProducts).Methods(http.MethodGet)
-	router.HandleFunc("/producs", handler.HandleCreateProduct).Methods(http.MethodPost)
+	router.HandleFunc("/products", handler.HandleGetProducts).Methods(http.MethodGet)
+	router.HandleFunc("/products", handler.HandleCreateProduct).Methods(http.MethodPost)
 }
 
 type Handler struct {
