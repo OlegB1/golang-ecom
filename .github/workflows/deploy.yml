@@ -29,4 +29,9 @@ jobs:
             --region=europe-west1 \
             --allow-unauthenticated \
             --add-cloudsql-instances=${{ secrets.INSTANCE_CONNECTION_NAME }} \
-            --set-env-vars="DB_HOST=/cloudsql/${{ secrets.INSTANCE_CONNECTION_NAME }},DB_USER=myuser,DB_PASSWORD=mypassword,SERVER_ADDR=8080"
+            --set-env-vars="DB_HOST=/cloudsql/${{ secrets.INSTANCE_CONNECTION_NAME }},\
+              DB_USER=${{ secrets.INSTANCE_CONNECTION_NAME }},\
+              DB_PASSWORD=${{ secrets.DB_PASSWORD }},\
+              JWT_EXPIRATION_SECONDS=${{ secrets.JWT_EXPIRATION_SECONDS }},\
+              JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }},\
+              SERVER_ADDR=8080"
